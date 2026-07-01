@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+
 </script>
 
 <template>
-  <HelloWorld />
+  <div class="min-h-screen bg-gray-100 p-8">
+    <h1 class="text-3xl font-bold text-gray-800">
+      Pecunia 🪙
+    </h1>
+    <p class="text-gray-600 mt-2">Gestión de finanzas personales</p>
+  </div>
 </template>
