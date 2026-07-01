@@ -39,10 +39,10 @@ Content-Type: application/json
 }
 
 ### 6. Traer una transacción por su id
-GET http://localhost:3000/transactions/PEGA_UN_ID_ACA
+GET http://localhost:3000/transactions/8e8b2a70-449d-464a-ae56-8a7816fa052c
 
 ### 7. Borrar esa transacción
-DELETE http://localhost:3000/transactions/PEGA_UN_ID_ACA
+DELETE http://localhost:3000/transactions/8e8b2a70-449d-464a-ae56-8a7816fa052c
 
 ### 8. Intentar traerla de nuevo (ya no existe → 404)
-GET http://localhost:3000/transactions/PEGA_UN_ID_ACA
+GET http://localhost:3000/transactions/8e8b2a70-449d-464a-ae56-8a7816fa052c
