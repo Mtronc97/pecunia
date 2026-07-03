@@ -2,6 +2,7 @@
 import { ref, computed } from "vue";
 import SummaryCard from "./components/SummaryCard.vue";
 import type { Transaction } from "./types/transaction";
+import TransactionList from "./components/TransactionList.vue";
 
 const transactions = ref<Transaction[]>([
   {
@@ -24,6 +25,14 @@ const transactions = ref<Transaction[]>([
     id: "3",
     type: "expense",
     amount: 2000,
+    category: "transporte",
+    description: "Carga de SUBE",
+    date: "2026-06-27",
+  },
+  {
+    id: "4",
+    type: "expense",
+    amount: 10000,
     category: "transporte",
     description: "Carga de SUBE",
     date: "2026-06-27",
@@ -54,6 +63,10 @@ const balance = computed(() => totalIncome.value - totalExpense.value);
       <SummaryCard title="Saldo total" :amount="balance" color="text-gray-800" />
       <SummaryCard title="Ingresos" :amount="totalIncome" color="text-green-600" />
       <SummaryCard title="Egresos" :amount="totalExpense" color="text-red-600" />
+    </div>
+
+    <div class="mt-8">
+      <TransactionList :transactions="transactions" />
     </div>
   </div>
 </template>
