@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import SummaryCard from "./components/SummaryCard.vue";
 import type { Transaction } from "./types/transaction";
 import TransactionList from "./components/TransactionList.vue";
+import TransactionForm from "./components/TransactionForm.vue";
 
 const transactions = ref<Transaction[]>([
   {
@@ -25,14 +26,6 @@ const transactions = ref<Transaction[]>([
     id: "3",
     type: "expense",
     amount: 2000,
-    category: "transporte",
-    description: "Carga de SUBE",
-    date: "2026-06-27",
-  },
-  {
-    id: "4",
-    type: "expense",
-    amount: 10000,
     category: "transporte",
     description: "Carga de SUBE",
     date: "2026-06-27",
@@ -65,8 +58,13 @@ const balance = computed(() => totalIncome.value - totalExpense.value);
       <SummaryCard title="Egresos" :amount="totalExpense" color="text-red-600" />
     </div>
 
-    <div class="mt-8">
-      <TransactionList :transactions="transactions" />
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      <div class="md:col-span-1">
+        <TransactionForm />
+      </div>
+      <div class="md:col-span-2">
+        <TransactionList :transactions="transactions" />
+      </div>
     </div>
   </div>
 </template>
