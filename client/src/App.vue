@@ -61,6 +61,10 @@ const totalExpense = computed(() =>
 );
 
 const balance = computed(() => totalIncome.value - totalExpense.value);
+
+function handleAddTransaction(transaction: Transaction) {
+  transactions.value.push(transaction);
+}
 </script>
 
 <template>
@@ -76,7 +80,7 @@ const balance = computed(() => totalIncome.value - totalExpense.value);
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 h-99">
       <div class="md:col-span-1 h-full">
-        <TransactionForm />
+        <TransactionForm @add-transaction="handleAddTransaction" />
       </div>
       <div class="md:col-span-2 h-full">
         <TransactionList :transactions="transactions" />

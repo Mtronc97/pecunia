@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { TransactionType } from "../types/transaction";
+import type { Transaction } from "../types/transaction";
 
 const type = ref<TransactionType>("expense");
 const amount = ref<number>(0);
@@ -19,6 +20,35 @@ const categories = [
 const category = ref<string>("Comida");
 const description = ref<string>("");
 const date = ref<string>("");
+
+
+const emit = defineEmits<{
+  (e: "add-transaction", transaction: Transaction): void;
+}>();
+
+function handleSubmit() {
+  if (!amount.value || amount.value <= 0 || !category.value || !date.value) {
+    alert("Por favor completá el monto (mayor a 0), la categoría y la fecha.");
+    return;
+  }
+
+  const newTransaction: Transaction = {
+    id: crypto.randomUUID(),
+    type: type.value,
+    amount: amount.value,
+    category: category.value,
+    description: description.value,
+    date: date.value,
+  };
+
+  emit("add-transaction", newTransaction);
+
+  amount.value = 0;
+  category.value = "Comida";
+  description.value = "";
+  date.value = "";
+  type.value = "expense";
+}
 </script>
 
 <template>
@@ -54,7 +84,10 @@ const date = ref<string>("");
 
         <input v-model="date" type="date" class="border rounded p-2" />
 
-        <button class="bg-blue-600 text-white rounded p-2 hover:bg-blue-700">
+        <button
+            @click="handleSubmit"
+            class="bg-blue-600 text-white rounded p-2 hover:bg-blue-700"
+            >
             Agregar
         </button>
 
