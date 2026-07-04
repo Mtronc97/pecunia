@@ -5,6 +5,10 @@ import TransactionItem from "./TransactionItem.vue";
 defineProps<{
   transactions: Transaction[];
 }>();
+
+const emit = defineEmits<{
+  (e: "delete", id: string): void;
+}>();
 </script>
 
 <template>
@@ -20,6 +24,7 @@ defineProps<{
         v-for="transaction in transactions"
         :key="transaction.id"
         :transaction="transaction"
+        @delete="emit('delete', $event)"
       />
     </div>
   </div>

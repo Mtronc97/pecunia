@@ -4,6 +4,10 @@ import type { Transaction } from "../types/transaction";
 defineProps<{
   transaction: Transaction;
 }>();
+
+const emit = defineEmits<{
+  (e: "delete", id: string): void;
+}>();
 </script>
 
 <template>
@@ -19,5 +23,13 @@ defineProps<{
       {{ transaction.type === 'income' ? '+' : '-' }}
       $ {{ transaction.amount.toLocaleString('es-AR') }}
     </p>
+
+    <button
+        @click="emit('delete', transaction.id)"
+        class="text-gray-400 hover:text-red-600 text-xl"
+        title="Eliminar"
+    >
+        🗑️
+    </button>
   </div>
 </template>

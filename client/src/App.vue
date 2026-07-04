@@ -69,6 +69,10 @@ function handleAddTransaction(transaction: Transaction) {
 const sortedTransactions = computed(() =>
   [...transactions.value].sort((a, b) => b.date.localeCompare(a.date))
 );
+
+function handleDelete(id: string) {
+  transactions.value = transactions.value.filter((t) => t.id !== id);
+}
 </script>
 
 <template>
@@ -87,7 +91,7 @@ const sortedTransactions = computed(() =>
         <TransactionForm @add-transaction="handleAddTransaction" />
       </div>
       <div class="md:col-span-2 h-full">
-        <TransactionList :transactions="sortedTransactions" />
+        <TransactionList :transactions="sortedTransactions" @delete="handleDelete" />
       </div>
     </div>
   </div>
