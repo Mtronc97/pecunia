@@ -4,7 +4,19 @@ import type { TransactionType } from "../types/transaction";
 
 const type = ref<TransactionType>("expense");
 const amount = ref<number>(0);
-const category = ref<string>("");
+const categories = [
+  "Sueldo",
+  "Comida",
+  "Transporte",
+  "Servicios",
+  "Vivienda",
+  "Salud",
+  "Ocio",
+  "Tarjeta",
+  "Varios",
+];
+
+const category = ref<string>("Comida");
 const description = ref<string>("");
 const date = ref<string>("");
 </script>
@@ -19,19 +31,19 @@ const date = ref<string>("");
             <option value="expense">Egreso</option>
         </select>
 
-        <input
+    <input
         v-model.number="amount"
         type="number"
+        min="0"
         placeholder="Monto"
-        class="border rounded p-2"
-        />
+        class="border rounded p-2 no-spinner"
+    />
 
-        <input
-            v-model="category"
-            type="text"
-            placeholder="Categoría (ej: comida)"
-            class="border rounded p-2"
-        />
+        <select v-model="category" class="border rounded p-2">
+            <option v-for="cat in categories" :key="cat" :value="cat">
+                {{ cat }}
+            </option>
+        </select>
 
         <input
             v-model="description"
@@ -46,9 +58,20 @@ const date = ref<string>("");
             Agregar
         </button>
 
-        <p class="text-xs text-gray-400">
-            DEBUG → tipo: {{ type }} | monto: {{ amount }} | cat: {{ category }} | desc: {{ description }} | fecha: {{ date }}
-        </p>
     </div>
 </div>
 </template>
+
+<style scoped>
+/* Oculta las flechas de subir/bajar del input de tipo number */
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spinner {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+</style>

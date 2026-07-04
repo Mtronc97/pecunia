@@ -30,6 +30,22 @@ const transactions = ref<Transaction[]>([
     description: "Carga de SUBE",
     date: "2026-06-27",
   },
+    {
+    id: "4",
+    type: "expense",
+    amount: 2000,
+    category: "transporte",
+    description: "Carga de SUBE",
+    date: "2026-06-27",
+  },
+    {
+    id: "5",
+    type: "expense",
+    amount: 2000,
+    category: "transporte",
+    description: "Carga de SUBE",
+    date: "2026-06-27",
+  },
 ]);
 
 const totalIncome = computed(() =>
@@ -58,11 +74,11 @@ const balance = computed(() => totalIncome.value - totalExpense.value);
       <SummaryCard title="Egresos" :amount="totalExpense" color="text-red-600" />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-      <div class="md:col-span-1">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 h-99">
+      <div class="md:col-span-1 h-full">
         <TransactionForm />
       </div>
-      <div class="md:col-span-2">
+      <div class="md:col-span-2 h-full">
         <TransactionList :transactions="transactions" />
       </div>
     </div>
