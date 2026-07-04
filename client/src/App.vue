@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import SummaryCard from "./components/SummaryCard.vue";
 import type { Transaction } from "./types/transaction";
 import TransactionList from "./components/TransactionList.vue";
 import TransactionForm from "./components/TransactionForm.vue";
+import { fetchTransactions } from "./services/transactionApi";
+
 
 const transactions = ref<Transaction[]>([
   {
     id: "1",
     type: "income",
     amount: 70000,
-    category: "sueldo",
+    category: "Sueldo",
     description: "Sueldo de junio",
     date: "2026-06-25",
   },
@@ -18,7 +20,7 @@ const transactions = ref<Transaction[]>([
     id: "2",
     type: "expense",
     amount: 1200,
-    category: "comida",
+    category: "Comida",
     description: "Almuerzo con Ana",
     date: "2026-06-26",
   },
@@ -26,7 +28,7 @@ const transactions = ref<Transaction[]>([
     id: "3",
     type: "expense",
     amount: 2000,
-    category: "transporte",
+    category: "Transporte",
     description: "Carga de SUBE",
     date: "2026-06-27",
   },
@@ -34,7 +36,7 @@ const transactions = ref<Transaction[]>([
     id: "4",
     type: "expense",
     amount: 2000,
-    category: "transporte",
+    category: "Transporte",
     description: "Carga de SUBE",
     date: "2026-06-27",
   },
@@ -42,7 +44,7 @@ const transactions = ref<Transaction[]>([
     id: "5",
     type: "expense",
     amount: 2000,
-    category: "transporte",
+    category: "Transporte",
     description: "Carga de SUBE",
     date: "2026-06-27",
   },
@@ -98,7 +100,14 @@ const filteredTransactions = computed(() => {
   );
 });
 
-
+onMounted(async () => {
+  try {
+    const data = await fetchTransactions();
+    transactions.value = data;
+  } catch (error) {
+    console.error("Error al cargar transacciones:", error);
+  }
+});
 </script>
 
 <template>
