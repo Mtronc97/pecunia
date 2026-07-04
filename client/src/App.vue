@@ -65,6 +65,10 @@ const balance = computed(() => totalIncome.value - totalExpense.value);
 function handleAddTransaction(transaction: Transaction) {
   transactions.value.push(transaction);
 }
+
+const sortedTransactions = computed(() =>
+  [...transactions.value].sort((a, b) => b.date.localeCompare(a.date))
+);
 </script>
 
 <template>
@@ -83,7 +87,7 @@ function handleAddTransaction(transaction: Transaction) {
         <TransactionForm @add-transaction="handleAddTransaction" />
       </div>
       <div class="md:col-span-2 h-full">
-        <TransactionList :transactions="transactions" />
+        <TransactionList :transactions="sortedTransactions" />
       </div>
     </div>
   </div>
