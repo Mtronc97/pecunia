@@ -67,12 +67,38 @@ function handleAddTransaction(transaction: Transaction) {
 }
 
 const sortedTransactions = computed(() =>
-  [...transactions.value].sort((a, b) => b.date.localeCompare(a.date))
+  [...filteredTransactions.value].sort((a, b) => b.date.localeCompare(a.date))
 );
 
 function handleDelete(id: string) {
   transactions.value = transactions.value.filter((t) => t.id !== id);
 }
+
+const selectedCategory = ref<string>("Todas");
+
+const filterCategories = [
+  "Todas",
+  "Sueldo",
+  "Comida",
+  "Transporte",
+  "Servicios",
+  "Vivienda",
+  "Salud",
+  "Ocio",
+  "Tarjeta",
+  "Varios",
+];
+
+const filteredTransactions = computed(() => {
+  if (selectedCategory.value === "Todas") {
+    return transactions.value;
+  }
+  return transactions.value.filter(
+    (t) => t.category === selectedCategory.value
+  );
+});
+
+
 </script>
 
 <template>
@@ -88,10 +114,17 @@ function handleDelete(id: string) {
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 h-99">
       <div class="md:col-span-1 h-full">
+
         <TransactionForm @add-transaction="handleAddTransaction" />
       </div>
       <div class="md:col-span-2 h-full">
-        <TransactionList :transactions="sortedTransactions" @delete="handleDelete" />
+        <TransactionList
+          :transactions="sortedTransactions"
+          :categories="filterCategories"
+          :selected-category="selectedCategory"
+          @delete="handleDelete"
+          @change-category="selectedCategory = $event"
+        />
       </div>
     </div>
   </div>

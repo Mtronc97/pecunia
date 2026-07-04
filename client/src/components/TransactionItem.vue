@@ -16,20 +16,23 @@ const emit = defineEmits<{
       <p class="font-medium text-gray-800">{{ transaction.description }}</p>
       <p class="text-sm text-gray-500">{{ transaction.category }} · {{ transaction.date }}</p>
     </div>
-    <p
-      class="font-bold"
-      :class="transaction.type === 'income' ? 'text-green-600' : 'text-red-600'"
-    >
-      {{ transaction.type === 'income' ? '+' : '-' }}
-      $ {{ transaction.amount.toLocaleString('es-AR') }}
-    </p>
 
-    <button
+    <div class="flex items-center gap-3">
+      <p
+        class="font-bold"
+        :class="transaction.type === 'income' ? 'text-green-600' : 'text-red-600'"
+      >
+        {{ transaction.type === 'income' ? '+' : '-' }}
+        $ {{ transaction.amount.toLocaleString('es-AR') }}
+      </p>
+
+      <button
         @click="emit('delete', transaction.id)"
-        class="text-gray-400 hover:text-red-600 text-xl"
+        class="text-gray-300 hover:text-red-600 text-lg"
         title="Eliminar"
-    >
+      >
         🗑️
-    </button>
+      </button>
+    </div>
   </div>
 </template>
