@@ -68,5 +68,7 @@ onMounted(() => {
         />
       </div>
     </div>
+
+    <pre class="text-xs mt-4">DEBUG gastos por categoría: {{ store.expensesByCategory }}</pre>
   </div>
 </template>

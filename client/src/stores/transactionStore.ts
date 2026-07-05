@@ -63,6 +63,18 @@ export const useTransactionStore = defineStore("transactions", () => {
     }
   }
 
+  const expensesByCategory = computed(() => {
+  const grouped: Record<string, number> = {};
+
+  for (const t of transactions.value) {
+    if (t.type === "expense") {
+      grouped[t.category] = (grouped[t.category] || 0) + t.amount;
+    }
+  }
+
+  return grouped;
+});
+
   return {
     transactions,
     isLoading,
@@ -70,8 +82,12 @@ export const useTransactionStore = defineStore("transactions", () => {
     totalIncome,
     totalExpense,
     balance,
+    expensesByCategory, 
     loadTransactions,
     addTransaction,
     removeTransaction,
   };
+
+
+
 });
