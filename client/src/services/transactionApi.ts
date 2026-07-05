@@ -7,3 +7,14 @@ export async function fetchTransactions(): Promise<Transaction[]> {
   const response = await axios.get<Transaction[]>(API_URL);
   return response.data;
 }
+
+export async function createTransaction(
+  transaction: Omit<Transaction, "id">
+): Promise<Transaction> {
+  const response = await axios.post<Transaction>(API_URL, transaction);
+  return response.data;
+}
+
+export async function deleteTransaction(id: string): Promise<void> {
+  await axios.delete(`${API_URL}/${id}`);
+}

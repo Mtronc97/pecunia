@@ -6,6 +6,8 @@ defineProps<{
   transactions: Transaction[];
   categories: string[];
   selectedCategory: string;
+  isLoading: boolean;
+  error: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -15,7 +17,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow p-6 flex flex-col h-99">
+  <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[396px]">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-bold text-gray-800">Transacciones</h2>
 
@@ -30,7 +32,15 @@ const emit = defineEmits<{
       </select>
     </div>
 
-    <div v-if="transactions.length === 0" class="text-gray-500">
+    <div v-if="isLoading" class="text-gray-500">
+      Cargando transacciones...
+    </div>
+
+    <div v-else-if="error" class="bg-red-100 text-red-700 rounded p-3">
+      {{ error }}
+    </div>
+
+    <div v-else-if="transactions.length === 0" class="text-gray-500">
       No hay transacciones en esta categoría.
     </div>
 

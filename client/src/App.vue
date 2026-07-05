@@ -1,112 +1,43 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import SummaryCard from "./components/SummaryCard.vue";
+import { onMounted, ref, computed } from "vue";
 import type { Transaction } from "./types/transaction";
-import TransactionList from "./components/TransactionList.vue";
+import SummaryCard from "./components/SummaryCard.vue";
 import TransactionForm from "./components/TransactionForm.vue";
-import { fetchTransactions } from "./services/transactionApi";
+import TransactionList from "./components/TransactionList.vue";
+import { useTransactionStore } from "./stores/transactionStore";
 
+const store = useTransactionStore();
 
-const transactions = ref<Transaction[]>([
-  {
-    id: "1",
-    type: "income",
-    amount: 70000,
-    category: "Sueldo",
-    description: "Sueldo de junio",
-    date: "2026-06-25",
-  },
-  {
-    id: "2",
-    type: "expense",
-    amount: 1200,
-    category: "Comida",
-    description: "Almuerzo con Ana",
-    date: "2026-06-26",
-  },
-  {
-    id: "3",
-    type: "expense",
-    amount: 2000,
-    category: "Transporte",
-    description: "Carga de SUBE",
-    date: "2026-06-27",
-  },
-    {
-    id: "4",
-    type: "expense",
-    amount: 2000,
-    category: "Transporte",
-    description: "Carga de SUBE",
-    date: "2026-06-27",
-  },
-    {
-    id: "5",
-    type: "expense",
-    amount: 2000,
-    category: "Transporte",
-    description: "Carga de SUBE",
-    date: "2026-06-27",
-  },
-]);
+// --- Filtro (se queda en App por ahora) ---
+const selectedCategory = ref<string>("Todas");
+const filterCategories = [
+  "Todas", "Sueldo", "Comida", "Transporte", "Servicios",
+  "Vivienda", "Salud", "Ocio", "Tarjeta", "Varios",
+];
 
-const totalIncome = computed(() =>
-  transactions.value
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + t.amount, 0)
-);
-
-const totalExpense = computed(() =>
-  transactions.value
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0)
-);
-
-const balance = computed(() => totalIncome.value - totalExpense.value);
-
-function handleAddTransaction(transaction: Transaction) {
-  transactions.value.push(transaction);
-}
+const filteredTransactions = computed(() => {
+  if (selectedCategory.value === "Todas") {
+    return store.transactions;
+  }
+  return store.transactions.filter((t) => t.category === selectedCategory.value);
+});
 
 const sortedTransactions = computed(() =>
   [...filteredTransactions.value].sort((a, b) => b.date.localeCompare(a.date))
 );
 
-function handleDelete(id: string) {
-  transactions.value = transactions.value.filter((t) => t.id !== id);
+// --- Handlers que delegan en el store ---
+function handleAddTransaction(transaction: Omit<Transaction, "id">) {
+  store.addTransaction(transaction);
 }
 
-const selectedCategory = ref<string>("Todas");
+function handleDelete(id: string) {
+  store.removeTransaction(id);
+}
 
-const filterCategories = [
-  "Todas",
-  "Sueldo",
-  "Comida",
-  "Transporte",
-  "Servicios",
-  "Vivienda",
-  "Salud",
-  "Ocio",
-  "Tarjeta",
-  "Varios",
-];
-
-const filteredTransactions = computed(() => {
-  if (selectedCategory.value === "Todas") {
-    return transactions.value;
-  }
-  return transactions.value.filter(
-    (t) => t.category === selectedCategory.value
-  );
-});
-
-onMounted(async () => {
-  try {
-    const data = await fetchTransactions();
-    transactions.value = data;
-  } catch (error) {
-    console.error("Error al cargar transacciones:", error);
-  }
+// --- Carga inicial desde el backend ---
+onMounted(() => {
+  store.loadTransactions();
 });
 </script>
 
@@ -116,21 +47,22 @@ onMounted(async () => {
     <p class="text-gray-600 mt-2 mb-8">Gestión de finanzas personales</p>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <SummaryCard title="Saldo total" :amount="balance" color="text-gray-800" />
-      <SummaryCard title="Ingresos" :amount="totalIncome" color="text-green-600" />
-      <SummaryCard title="Egresos" :amount="totalExpense" color="text-red-600" />
+      <SummaryCard title="Saldo total" :amount="store.balance" color="text-gray-800" />
+      <SummaryCard title="Ingresos" :amount="store.totalIncome" color="text-green-600" />
+      <SummaryCard title="Egresos" :amount="store.totalExpense" color="text-red-600" />
     </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 h-99">
-      <div class="md:col-span-1 h-full">
-
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 h-[396px]">
+      <div class="md:col-span-1">
         <TransactionForm @add-transaction="handleAddTransaction" />
       </div>
-      <div class="md:col-span-2 h-full">
+      <div class="md:col-span-2">
         <TransactionList
           :transactions="sortedTransactions"
           :categories="filterCategories"
           :selected-category="selectedCategory"
+          :is-loading="store.isLoading"
+          :error="store.error"
           @delete="handleDelete"
           @change-category="selectedCategory = $event"
         />
