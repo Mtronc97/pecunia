@@ -6,6 +6,7 @@ import TransactionForm from "./components/TransactionForm.vue";
 import TransactionList from "./components/TransactionList.vue";
 import { useTransactionStore } from "./stores/transactionStore";
 import ExpensesChart from "./components/ExpensesChart.vue";
+import BalanceChart from "./components/BalanceChart.vue";
 
 const store = useTransactionStore();
 
@@ -70,8 +71,9 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
       <ExpensesChart />
+      <BalanceChart />
     </div>
   </div>
 </template>
