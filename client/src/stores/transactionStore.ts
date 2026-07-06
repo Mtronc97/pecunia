@@ -7,27 +7,39 @@ import {
   deleteTransaction,
 } from "../services/transactionApi";
 
+
+function getCurrentMonth(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
+
 export const useTransactionStore = defineStore("transactions", () => {
     
   // --- State ---
   const transactions = ref<Transaction[]>([]);
   const isLoading = ref<boolean>(false);
   const error = ref<string | null>(null);
+  const selectedMonth = ref<string>(getCurrentMonth());
 
   // --- Getters ---
-  const totalIncome = computed(() =>
-    transactions.value
-      .filter((t) => t.type === "income")
-      .reduce((sum, t) => sum + t.amount, 0)
-  );
+const totalIncome = computed(() =>
+  transactionsOfMonth.value
+    .filter((t) => t.type === "income")
+    .reduce((sum, t) => sum + t.amount, 0)
+);
 
-  const totalExpense = computed(() =>
-    transactions.value
-      .filter((t) => t.type === "expense")
-      .reduce((sum, t) => sum + t.amount, 0)
-  );
+const totalExpense = computed(() =>
+  transactionsOfMonth.value
+    .filter((t) => t.type === "expense")
+    .reduce((sum, t) => sum + t.amount, 0)
+);
 
-  const balance = computed(() => totalIncome.value - totalExpense.value);
+const balance = computed(() => totalIncome.value - totalExpense.value);
+
+
 
   // --- Actions ---
   async function loadTransactions() {
@@ -63,26 +75,32 @@ export const useTransactionStore = defineStore("transactions", () => {
     }
   }
 
-  const expensesByCategory = computed(() => {
+const expensesByCategory = computed(() => {
   const grouped: Record<string, number> = {};
-
-  for (const t of transactions.value) {
+  for (const t of transactionsOfMonth.value) {
     if (t.type === "expense") {
       grouped[t.category] = (grouped[t.category] || 0) + t.amount;
     }
   }
-
   return grouped;
 });
 
-  return {
+const transactionsOfMonth = computed(() =>
+  transactions.value.filter((t) => t.date.slice(0, 7) === selectedMonth.value)
+);
+
+
+
+return {
     transactions,
     isLoading,
     error,
+    selectedMonth,
+    transactionsOfMonth,
     totalIncome,
     totalExpense,
     balance,
-    expensesByCategory, 
+    expensesByCategory,
     loadTransactions,
     addTransaction,
     removeTransaction,

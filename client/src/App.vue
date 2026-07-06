@@ -19,9 +19,11 @@ const filterCategories = [
 
 const filteredTransactions = computed(() => {
   if (selectedCategory.value === "Todas") {
-    return store.transactions;
+    return store.transactionsOfMonth;
   }
-  return store.transactions.filter((t) => t.category === selectedCategory.value);
+  return store.transactionsOfMonth.filter(
+    (t) => t.category === selectedCategory.value
+  );
 });
 
 const sortedTransactions = computed(() =>
@@ -48,11 +50,23 @@ onMounted(() => {
     <h1 class="text-3xl font-bold text-gray-800">Pecunia 🪙</h1>
     <p class="text-gray-600 mt-2 mb-8">Gestión de finanzas personales</p>
 
+    <div class="mb-8">
+  <label class="text-gray-600 mr-2">Mes:</label>
+  <input
+    type="month"
+    :value="store.selectedMonth"
+    @change="store.selectedMonth = ($event.target as HTMLInputElement).value"
+    class="border rounded p-2"
+  />
+</div>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <SummaryCard title="Saldo total" :amount="store.balance" color="text-gray-800" />
       <SummaryCard title="Ingresos" :amount="store.totalIncome" color="text-green-600" />
       <SummaryCard title="Egresos" :amount="store.totalExpense" color="text-red-600" />
     </div>
+
+    
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 h-[396px]">
       <div class="md:col-span-1">
