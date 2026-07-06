@@ -5,6 +5,7 @@ import SummaryCard from "./components/SummaryCard.vue";
 import TransactionForm from "./components/TransactionForm.vue";
 import TransactionList from "./components/TransactionList.vue";
 import { useTransactionStore } from "./stores/transactionStore";
+import ExpensesChart from "./components/ExpensesChart.vue";
 
 const store = useTransactionStore();
 
@@ -69,6 +70,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <pre class="text-xs mt-4">DEBUG gastos por categoría: {{ store.expensesByCategory }}</pre>
+    <div class="mt-8">
+      <ExpensesChart />
+    </div>
   </div>
 </template>
